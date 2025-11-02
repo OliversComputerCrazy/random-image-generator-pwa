@@ -2,7 +2,7 @@
   "name": "Lock app",
   "short_name": "Lock",
   "description": "an pwa that fetches random images",
-  "start_url": "/index.html",
+  "start_url": "index.html",
   "scope": "/",
   "display": "standalone",
   "background_color": "#111",
