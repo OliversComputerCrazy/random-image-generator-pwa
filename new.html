@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lock App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+    }
+    #lock-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 300px;
+    }
+    input[type="password"] {
+      width: 80%;
+      padding: 20px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      background-color: #111;
+      color: white
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background: #111;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #59875a;
+    }
+    #message {
+      color: red;
+      margin-top: 10px;
+      height: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="lock-container">
+    <h2>Lock App</h2>
+    <input type="password" id="password-input" placeholder="Enter password" />
+    <br>
+    <button id="submit-btn">Submit</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const input = document.getElementById('password-input');
+    const button = document.getElementById('submit-btn');
+    const message = document.getElementById('message');
+
+    const savedPassword = localStorage.getItem('lockPassword');
+
+    if (!savedPassword) {
+      message.textContent = "Set your new password";
+    } else {
+      message.textContent = "Enter your password to unlock";
+    }
+
+    button.addEventListener('click', () => {
+      const entered = input.value;
+
+      if (!savedPassword) {
+        // First time setup
+        if (entered.length < 4) {
+          message.textContent = "Password must be at least 4 characters";
+          return;
+        }
+        localStorage.setItem('lockPassword', entered);
+        message.style.color = 'green';
+        message.textContent = "Password saved! Refresh to login";
+        input.value = '';
+      } else {
+        // Check password
+        if (entered === savedPassword) {
+          message.style.color = 'green';
+          message.textContent = "Unlocked! Redirecting...";
+          input.value = '';
+          // Redirect to Google
+          window.location.href = "redirect.html";
+        } else {
+          message.style.color = 'red';
+          message.textContent = "Wrong password!";
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
+

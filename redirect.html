@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    h1, h2, h3, h4, h5, h6, p {
+      color: #111
+    }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+    }
+    button {
+      padding: 20px;
+      border-radius: 10px;
+      background: #111;
+      color: white;
+    }
+    #main-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 300px;
+    }
+  </style>
+  <title> Redirect </title>
+</head>
+<body id = pageBody>
+  <div id= "main-container">
+    <h1> Choose where you want to go </h1>
+    <button onclick = "window.location.href='Feed-tags.html'"> Without Favourites </button>
+    <br><br>
+    <button onclick = "window.location.href='Feed-tags-favourites.html'"> With Favourites </button>
+  </div>
+  <script>
+  </script>
+</body>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom boxes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background: #111;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #59875a;
+    }
+    h1, h2, h3, h4, h5, h6, p {
+      color: white
+    }
+    #sub-p-1 {
+      color: #111
+    }
+    #main-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 300px;
+    }
+    #other-container-1, #other-container-2, #other-container-3 {
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    #main-container:hover {
+      background: #cfcfcf;
+    }
+    #other-container-1:hover, #other-container-2:hover, #other-container-3:hover {
+      background: #454444;
+    }
+    #sub-container-1 {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    #sub-container-1:hover {
+      background: #cfcfcf;
+    }
+  </style>
+</head>
+<body>
+  <div id="main-container">
+    <div id= "other-container-1">
+      <h1>Hello</h1>
+    </div>
+      <br>
+    <div id= "other-container-2">
+      <h2>These are my custom boxes</h2>
+    </div>
+      <br>
+    <div id= "other-container-3">
+      <h3>Another custom box</h3>
+      <div id= "sub-container-1">
+        <p id= "sub-p-1">This is one of my custom sub-boxes</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

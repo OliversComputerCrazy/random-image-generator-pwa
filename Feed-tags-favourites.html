@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Waifu Image Feed with Tags & Favorites</title>
+<style>
+  body {
+    background-color: #111;
+    color: white;
+    text-align: center;
+    font-family: sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  img { max-height: 60vh; max-width: 90vw; border-radius: 12px; margin-bottom: 10px; transition: opacity 0.4s ease; }
+  .fade-out { opacity: 0; }
+  .fade-in { opacity: 1; }
+  select { padding: 8px; font-size: 16px; border-radius: 8px; margin: 10px; }
+  p { opacity: 0.7; font-size: 14px; margin-top: 0; }
+  .fav-btn { cursor: pointer; font-size: 2rem; margin-bottom: 10px; }
+  #tab-bar { display: flex; justify-content: space-around; width: 100%; background: #222; padding: 10px 0; position: fixed; bottom: 0; }
+  .tab { cursor: pointer; padding: 5px 20px; font-weight: bold; color: white; }
+  .tab.active { background: #555; border-radius: 5px; }
+  #favorites-container { display: flex; flex-wrap: wrap; gap: 10px; padding: 10px; overflow-y: auto; max-height: 70vh; width: 100%; }
+  #favorites-container img { max-width: 150px; max-height: 150px; border-radius: 5px; cursor: pointer; }
+</style>
+</head>
+<body>
+<h1>Waifu Image Feed</h1>
+
+  <select id="tagSelect">
+    <option value="maid">maid</option>
+    <option value="waifu">waifu</option>
+    <option value="oppai">oppai</option>
+    <option value="selfies">selfies</option>
+    <option value="uniform">uniform</option>
+    <option value="oral">oral</option>
+    <option value="hentai">hentai</option>
+    <option value="ass">butt</option>
+    <option value="ero">ero</option>
+  </select>
+
+<div id="explore-view">
+  <img id="image" alt="Loading..." class="fade-in"/>
+  <div class="fav-btn" id="fav-btn">♡</div>
+  <p>⬆ / ⬇ to navigate | swipe up/down on mobile</p>
+</div>
+
+<div id="favorites-view" style="display:none;">
+  <div id="favorites-container"></div>
+</div>
+
+<div id="tab-bar">
+  <div class="tab active" id="explore-tab">Explore</div>
+  <div class="tab" id="favorites-tab">Favorites</div>
+</div>
+
+<script>
+const img = document.getElementById('image');
+const tagSelect = document.getElementById('tagSelect');
+const favBtn = document.getElementById('fav-btn');
+const exploreTab = document.getElementById('explore-tab');
+const favoritesTab = document.getElementById('favorites-tab');
+const exploreView = document.getElementById('explore-view');
+const favoritesView = document.getElementById('favorites-view');
+const favoritesContainer = document.getElementById('favorites-container');
+
+let selected = tagSelect.value;
+let history = [];
+let currentIndex = -1;
+let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+tagSelect.addEventListener('change', () => {
+  selected = tagSelect.value;
+  history = [];
+  currentIndex = -1;
+  loadNewImage();
+});
+
+async function loadNewImage() {
+  try {
+    const apiUrl = 'https://api.waifu.im/search';
+    const params = { included_tags: [selected], height: '>=2000' };
+    const queryParams = new URLSearchParams();
+    for (const key in params) {
+      if (Array.isArray(params[key])) params[key].forEach(v => queryParams.append(key,v));
+      else queryParams.set(key, params[key]);
+    }
+    const requestUrl = `${apiUrl}?${queryParams.toString()}`;
+    const response = await fetch(requestUrl);
+    const data = await response.json();
+    const imageUrl = data.images[0].url;
+
+    history.push(imageUrl);
+    currentIndex = history.length - 1;
+    showImage(imageUrl);
+  } catch (err) { console.error('Error fetching image:', err); }
+}
+
+function showImage(url) {
+  img.classList.remove('fade-in'); img.classList.add('fade-out');
+  setTimeout(() => {
+    img.src = url;
+    img.onload = () => { img.classList.remove('fade-out'); img.classList.add('fade-in'); }
+    favBtn.textContent = favorites.includes(url) ? '❤️' : '♡';
+  }, 200);
+}
+
+function previousImage() { if(currentIndex>0){currentIndex--; showImage(history[currentIndex]);} }
+function nextImage() { if(currentIndex < history.length-1){currentIndex++; showImage(history[currentIndex]);} else { loadNewImage(); } }
+
+favBtn.addEventListener('click', () => {
+  const url = history[currentIndex];
+  if(favorites.includes(url)) favorites = favorites.filter(f=>f!==url);
+  else favorites.push(url);
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  favBtn.textContent = favorites.includes(url) ? '❤️' : '♡';
+  renderFavorites();
+});
+
+function renderFavorites() {
+  favoritesContainer.innerHTML = '';
+  favorites.forEach(url => {
+    const fImg = document.createElement('img');
+    fImg.src = url;
+    fImg.addEventListener('click', () => {
+      exploreTab.click();
+      history.push(url);
+      currentIndex = history.length-1;
+      showImage(url);
+    });
+    favoritesContainer.appendChild(fImg);
+  });
+}
+
+exploreTab.addEventListener('click', () => {
+  exploreTab.classList.add('active'); favoritesTab.classList.remove('active');
+  exploreView.style.display = 'block'; favoritesView.style.display = 'none';
+});
+
+favoritesTab.addEventListener('click', () => {
+  exploreTab.classList.remove('active'); favoritesTab.classList.add('active');
+  exploreView.style.display = 'none'; favoritesView.style.display = 'block';
+  renderFavorites();
+});
+
+window.addEventListener('keydown', e => {
+  if(exploreTab.classList.contains('active')) {
+    if(e.key==='ArrowDown') nextImage();
+    if(e.key==='ArrowUp') previousImage();
+  }
+});
+
+let startY=0;
+window.addEventListener('touchstart', e=>startY=e.touches[0].clientY);
+window.addEventListener('touchend', e=>{
+  const endY = e.changedTouches[0].clientY;
+  const diff = startY-endY;
+  if(diff>50) nextImage(); else if(diff<-50) previousImage();
+});
+
+// Load first image
+loadNewImage();
+</script>
+</body>
+</html>
