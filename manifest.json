@@ -3,7 +3,7 @@
   "short_name": "Lock",
   "description": "an pwa that fetches random images",
   "start_url": "index.html",
-  "scope": "/",
+  "scope": "/random-image-generator-pwa/",
   "display": "standalone",
   "background_color": "#111",
   "theme_color": "#111",
