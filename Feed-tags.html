@@ -86,10 +86,9 @@
 
     async function loadNewImage() {
       try {
-        const apiUrl = 'https://api.waifu.im/search';
+        const apiUrl = 'https://api.waifu.im/images';
         const params = {
-          included_tags: [selected],
-          height: '>=2000'
+          included_tags: [selected]
         };
 
         const queryParams = new URLSearchParams();
@@ -104,7 +103,7 @@
         const requestUrl = `${apiUrl}?${queryParams.toString()}`;
         const response = await fetch(requestUrl);
         const data = await response.json();
-        const imageUrl = data.images[0].url;
+        const imageUrl = data.items[0].url;
 
         if (history[currentIndex] !== imageUrl) {
           history.push(imageUrl);
@@ -167,4 +166,5 @@
   </script>
 </body>
 </html>
+
 
