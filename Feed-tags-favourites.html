@@ -83,8 +83,8 @@ tagSelect.addEventListener('change', () => {
 
 async function loadNewImage() {
   try {
-    const apiUrl = 'https://api.waifu.im/search';
-    const params = { included_tags: [selected], height: '>=2000' };
+    const apiUrl = 'https://api.waifu.im/images';
+    const params = { included_tags: [selected],};
     const queryParams = new URLSearchParams();
     for (const key in params) {
       if (Array.isArray(params[key])) params[key].forEach(v => queryParams.append(key,v));
@@ -93,7 +93,7 @@ async function loadNewImage() {
     const requestUrl = `${apiUrl}?${queryParams.toString()}`;
     const response = await fetch(requestUrl);
     const data = await response.json();
-    const imageUrl = data.images[0].url;
+    const imageUrl = data.items[0].url;
 
     history.push(imageUrl);
     currentIndex = history.length - 1;
@@ -168,3 +168,4 @@ loadNewImage();
 </script>
 </body>
 </html>
+
