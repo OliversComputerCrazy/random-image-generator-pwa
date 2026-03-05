@@ -84,7 +84,7 @@ tagSelect.addEventListener('change', () => {
 async function loadNewImage() {
   try {
     const apiUrl = 'https://api.waifu.im/images';
-    const params = { includedTags: [selected], isNsfw: All};
+    const params = { includedTags: [selected], isNsfw: "All"};
     const queryParams = new URLSearchParams();
     for (const key in params) {
       if (Array.isArray(params[key])) params[key].forEach(v => queryParams.append(key,v));
@@ -168,6 +168,7 @@ loadNewImage();
 </script>
 </body>
 </html>
+
 
 
 
